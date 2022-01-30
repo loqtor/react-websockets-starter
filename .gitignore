@@ -1,0 +1,25 @@
+# Javascript:
+dist
+!jest.config.js
+*.d.ts
+node_modules
+built
+.env
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+template.yaml
+
+# IDEs
+.idea
+
+# OS
+.DS_Store
+
+# Backup files
+*~
+
+# Logs
+.log/**
+.gen
