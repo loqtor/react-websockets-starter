@@ -1,0 +1,9 @@
+package.json
+package-lock.json
+yarn.lock
+build
+
+# CRA modifies this file on build and causes the check-format script to fail
+tsconfig.json
+
+public/mockServiceWorker.js

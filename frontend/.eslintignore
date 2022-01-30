@@ -1,0 +1,10 @@
+*.json
+public
+static
+.cache
+content
+.eslintrc.js
+dist
+build
+template
+src/registerServiceWorker.js
