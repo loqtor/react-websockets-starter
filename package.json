@@ -1,0 +1,11 @@
+{
+  "name": "react-websocket-starter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:loqtor/react-websocket-starter",
+  "author": "Martín Martínez <martin.martinez.sanchez@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "husky": "^7.0.4"
+  }
+}
