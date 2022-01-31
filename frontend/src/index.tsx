@@ -2,7 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import App from './App';
+import App from './app';
+import { WebSocketsProvider } from './contexts/web-sockets';
 import reportWebVitals from './reportWebVitals';
 
 const queryClient = new QueryClient();
@@ -10,7 +11,9 @@ const queryClient = new QueryClient();
 render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <WebSocketsProvider>
+        <App />
+      </WebSocketsProvider>
     </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root'),

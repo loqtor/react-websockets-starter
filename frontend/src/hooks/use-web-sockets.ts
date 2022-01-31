@@ -7,12 +7,18 @@ const SOCKET_OPTIONS: Partial<ManagerOptions & SocketOptions> = {
   transports: ['websocket', 'polling'],
 };
 
-export enum SocketEvents {
+export enum DefaultSocketEvents {
   CONNECTION_ERROR = 'connect_error',
   DISCONNECT = 'DISCONNECT',
   LOG = 'LOG',
   ERROR = 'ERROR',
 }
+
+export enum CustomSocketEvents {
+  CUSTOM_EVENT = 'CUSTOM_EVENT',
+}
+
+export type SocketEvents = DefaultSocketEvents | CustomSocketEvents;
 
 export interface IWebSocketEvent {
   event: SocketEvents;
@@ -20,10 +26,13 @@ export interface IWebSocketEvent {
 }
 
 const DEFAULT_EVENTS: IWebSocketEvent[] = [
-  { event: SocketEvents.DISCONNECT, callback: (socket) => socket.disconnect() },
-  { event: SocketEvents.LOG, callback: (args) => console.log('Socket Logger: ', args) },
-  { event: SocketEvents.CONNECTION_ERROR, callback: (error) => console.log('Web Socket connection error', error) },
-  { event: SocketEvents.ERROR, callback: (error) => console.log('Web Socket error', error) },
+  { event: DefaultSocketEvents.DISCONNECT, callback: (socket) => socket.disconnect() },
+  { event: DefaultSocketEvents.LOG, callback: (args) => console.log('Socket Logger: ', args) },
+  {
+    event: DefaultSocketEvents.CONNECTION_ERROR,
+    callback: (error) => console.log('Web Socket connection error', error),
+  },
+  { event: DefaultSocketEvents.ERROR, callback: (error) => console.log('Web Socket error', error) },
 ];
 
 export interface IUseWebSocketParams {
@@ -31,8 +40,16 @@ export interface IUseWebSocketParams {
   query?: { [keyof: string]: string };
 }
 
-export const useWebSockets = ({ events, query }: IUseWebSocketParams) => {
+export interface IUseWebSocketResponse {
+  init: () => void;
+  bindEvent: ({ event, callback }: IWebSocketEvent) => void;
+  events?: IWebSocketEvent[];
+  socketConnection?: Socket;
+}
+
+export const useWebSockets = ({ events, query }: IUseWebSocketParams): IUseWebSocketResponse => {
   const [socketConnection, setSocketConnection] = useState<Socket>();
+  const [socketEvents, setSocketEvents] = useState<IWebSocketEvent[]>(events || []);
 
   useEffect(() => {
     if (!socketConnection) {
@@ -63,9 +80,15 @@ export const useWebSockets = ({ events, query }: IUseWebSocketParams) => {
     });
   };
 
+  const bindEvent = ({ event, callback }: IWebSocketEvent) => {
+    socketConnection?.on(event, callback);
+    setSocketEvents([...(events || []), { event, callback }]);
+  };
+
   return {
     init,
-    events,
+    bindEvent,
+    events: socketEvents,
     socketConnection,
   };
 };

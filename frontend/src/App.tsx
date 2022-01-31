@@ -1,15 +1,12 @@
+import { useContext } from 'react';
 import { useEffect } from 'react';
-import { useWebSockets } from './hooks/useWebSockets';
+import { WebSocketsContext } from './contexts/web-sockets';
 
 const App = () => {
-  const { init: initWebSockets, socketConnection } = useWebSockets({});
+  const { init, socketConnection } = useContext(WebSocketsContext);
 
   useEffect(() => {
-    const startSockets = async () => {
-      return await initWebSockets();
-    };
-
-    startSockets();
+    init();
   }, []);
 
   return (
